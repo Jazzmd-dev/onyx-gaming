@@ -1,0 +1,8 @@
+<onyx-drawer id="CartDrawer" class="drawer drawer--right cart-drawer" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle">
+  <div class="drawer__overlay" data-drawer-close></div>
+  <div class="drawer__panel">
+    <div data-cart-section="cart-drawer" class="cart-drawer__contents" style="display: contents;">
+      {%- render 'cart-contents', context: 'drawer' -%}
+    </div>
+  </div>
+</onyx-drawer>

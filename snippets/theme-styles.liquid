@@ -1,0 +1,44 @@
+{%- comment -%}
+  Global design tokens generated from theme settings.
+  Fonts are served from Shopify's font CDN with font-display: swap.
+{%- endcomment -%}
+{%- liquid
+  assign heading_font_bold = settings.type_header_font | font_modify: 'weight', '700'
+  assign body_font_medium = settings.type_body_font | font_modify: 'weight', '500'
+  assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+-%}
+<style>
+  {{ settings.type_header_font | font_face: font_display: 'swap' }}
+  {{ heading_font_bold | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+  {{ body_font_medium | font_face: font_display: 'swap' }}
+  {{ body_font_bold | font_face: font_display: 'swap' }}
+
+  :root {
+    --font-heading: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    --font-heading-weight: {{ settings.type_header_font.weight }};
+    --font-body: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --font-body-weight: {{ settings.type_body_font.weight }};
+    --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+
+    --c-bg: {{ settings.color_background }};
+    --c-bg-rgb: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
+    --c-surface: {{ settings.color_surface }};
+    --c-surface-rgb: {{ settings.color_surface.red }}, {{ settings.color_surface.green }}, {{ settings.color_surface.blue }};
+    --c-accent: {{ settings.color_accent }};
+    --c-accent-rgb: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
+    --c-accent-2: {{ settings.color_accent_2 }};
+    --c-accent-2-rgb: {{ settings.color_accent_2.red }}, {{ settings.color_accent_2.green }}, {{ settings.color_accent_2.blue }};
+    --c-text: {{ settings.color_text }};
+    --c-text-rgb: {{ settings.color_text.red }}, {{ settings.color_text.green }}, {{ settings.color_text.blue }};
+    --c-muted: {{ settings.color_text_muted }};
+    --c-muted-rgb: {{ settings.color_text_muted.red }}, {{ settings.color_text_muted.green }}, {{ settings.color_text_muted.blue }};
+    --c-sale: {{ settings.color_sale }};
+    --c-success: {{ settings.color_success }};
+
+    --page-width: {{ settings.page_width }}px;
+    --radius: {{ settings.corner_radius }}px;
+    --radius-sm: {{ settings.corner_radius | divided_by: 2 }}px;
+    --radius-btn: {% if settings.button_style == 'pill' %}999px{% else %}{{ settings.corner_radius | divided_by: 2 }}px{% endif %};
+  }
+</style>

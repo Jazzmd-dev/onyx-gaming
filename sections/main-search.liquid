@@ -1,0 +1,103 @@
+{%- liquid
+  assign show_filters = section.settings.enable_filtering
+  assign layout_class = ''
+  if show_filters and search.filters.size > 0
+    assign layout_class = 'collection-layout--sidebar'
+  endif
+  assign q_enc = search.terms | url_encode
+  assign clear_url = routes.search_url | append: '?q=' | append: q_enc | append: '&options%5Bprefix%5D=last'
+-%}
+<div class="page-hero page-width">
+  <p class="eyebrow">{{ 'search.title' | t }}</p>
+  <h1 class="h1">
+    {%- if search.performed -%}{{ 'search.results_for' | t: terms: search.terms }}{%- else -%}{{ 'search.heading' | t }}{%- endif -%}
+  </h1>
+  <form action="{{ routes.search_url }}" method="get" role="search" class="newsletter-form" style="margin: 24px 0 0; max-width: 640px;">
+    <label for="MainSearch" class="visually-hidden">{{ 'search.label' | t }}</label>
+    <input id="MainSearch" class="input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" autocomplete="off">
+    <input type="hidden" name="options[prefix]" value="last">
+    <button type="submit" class="btn">{% render 'icon', name: 'search' %}<span class="visually-hidden">{{ 'header.search' | t }}</span></button>
+  </form>
+</div>
+
+{%- if search.performed -%}
+  <onyx-facets class="page-width" data-section-id="{{ section.id }}" style="display: block;">
+    {%- paginate search.results by section.settings.per_page -%}
+      <div class="collection-layout {{ layout_class }}">
+        {%- if layout_class != blank -%}
+          <aside class="facets" aria-label="{{ 'collections.filters.title' | t }}" data-facets-sidebar>
+            {% render 'facets', results: search, id_prefix: 'Sidebar' %}
+          </aside>
+        {%- endif -%}
+        <div>
+          {% render 'collection-toolbar', results: search, section: section, show_filters: show_filters, show_sort: true, count: search.results_count %}
+          {% render 'active-filters', results: search, clear_url: clear_url %}
+          <div data-collection-grid class="collection-grid">
+            {%- if search.results_count > 0 -%}
+              <ul class="grid list-unstyled" role="list" style="--cols-mobile: 2; --cols-tablet: 3; --cols-desktop: {% if layout_class != blank %}4{% else %}5{% endif %};">
+                {%- for item in search.results -%}
+                  <li>
+                    {%- case item.object_type -%}
+                      {%- when 'product' -%}
+                        {% render 'product-card', product: item, index: forloop.index0 %}
+                      {%- else -%}
+                        <a href="{{ item.url }}" class="article-card reveal">
+                          <div class="media" style="--ratio: 1;">
+                            {%- if item.image -%}
+                              {{ item.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: '' }}
+                            {%- else -%}
+                              <div class="placeholder-svg" style="position:absolute; inset:0; display:grid; place-items:center;">{% render 'icon', name: 'sparkle' %}</div>
+                            {%- endif -%}
+                          </div>
+                          <span class="article-card__meta">{{ item.object_type | capitalize }}</span>
+                          <h3 class="article-card__title">{{ item.title | escape }}</h3>
+                        </a>
+                    {%- endcase -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- else -%}
+              <div class="empty-state">
+                <p class="h3">{{ 'search.no_results' | t: terms: search.terms }}</p>
+                <p>{{ 'search.no_results_text' | t }}</p>
+                <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'collections.shop_all' | t }}</a>
+              </div>
+            {%- endif -%}
+          </div>
+          <div data-pagination>{% render 'pagination', paginate: paginate, facets: true %}</div>
+        </div>
+      </div>
+    {%- endpaginate -%}
+
+    {%- if show_filters and search.filters.size > 0 -%}
+      <onyx-drawer id="FilterDrawer-{{ section.id }}" class="drawer drawer--left filter-drawer" role="dialog" aria-modal="true" aria-labelledby="FilterDrawerTitle-{{ section.id }}">
+        <div class="drawer__overlay" data-drawer-close></div>
+        <div class="drawer__panel">
+          <div class="drawer__head">
+            <h2 class="drawer__title" id="FilterDrawerTitle-{{ section.id }}">{% render 'icon', name: 'filter' %}{{ 'collections.filters.title' | t }}</h2>
+            <button type="button" class="icon-btn" data-drawer-close data-drawer-focus>{% render 'icon', name: 'close' %}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+          </div>
+          <div class="drawer__body" data-facets-drawer-body>
+            {% render 'facets', results: search, id_prefix: 'Drawer' %}
+          </div>
+          <div class="drawer__foot" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <a href="{{ clear_url }}" class="btn btn--secondary" data-facet-link>{{ 'collections.filters.clear' | t }}</a>
+            <button type="button" class="btn" data-drawer-close>{{ 'collections.filters.show_results' | t }}</button>
+          </div>
+        </div>
+      </onyx-drawer>
+    {%- endif -%}
+  </onyx-facets>
+{%- else -%}
+  <div class="page-width page-content"></div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Results per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "enable_filtering", "label": "Enable filtering", "default": true }
+  ]
+}
+{% endschema %}

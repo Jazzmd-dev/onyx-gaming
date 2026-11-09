@@ -1,0 +1,13 @@
+{%- comment -%} Params: eyebrow, heading, text, link_label, link_url, center, id {%- endcomment -%}
+{%- if heading != blank or eyebrow != blank or text != blank -%}
+  <div class="section-header{% if center %} section-header--center{% endif %} reveal">
+    <div class="section-header__text">
+      {%- if eyebrow != blank -%}<p class="eyebrow">{{ eyebrow | escape }}</p>{%- endif -%}
+      {%- if heading != blank -%}<h2 class="h2"{% if id %} id="{{ id }}"{% endif %}>{{ heading | escape }}</h2>{%- endif -%}
+      {%- if text != blank -%}<div class="rte">{{ text }}</div>{%- endif -%}
+    </div>
+    {%- if link_label != blank and link_url != blank -%}
+      <a href="{{ link_url }}" class="link">{{ link_label | escape }} {% render 'icon', name: 'arrow' %}</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

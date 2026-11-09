@@ -1,0 +1,52 @@
+<article class="article">
+  <div class="page-width page-width--narrow">
+    <div class="page-hero">
+      <p class="eyebrow">{{ article.published_at | time_tag: format: 'date' }}{% if article.author != blank %} · {{ article.author | escape }}{% endif %}</p>
+      <h1 class="h1">{{ article.title | escape }}</h1>
+    </div>
+  </div>
+  {%- if article.image -%}
+    <div class="page-width article__media">
+      <div class="media" style="--ratio: 2;">
+        {%- assign img_alt = article.image.alt | default: article.title -%}
+        {{ article.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1440px) 1440px, 100vw', widths: '600, 900, 1200, 1600, 2000, 2400', alt: img_alt}}
+      </div>
+    </div>
+  {%- endif -%}
+  <div class="page-width page-width--narrow">
+    <div class="rte">{{ article.content }}</div>
+    <div style="display:flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(var(--c-text-rgb), .08);">
+      <a href="{{ blog.url }}" class="link">{% render 'icon', name: 'chevron-left' %} {{ 'blogs.back' | t: title: blog.title }}</a>
+      <button type="button" class="share-btn" data-share data-title="{{ article.title | escape }}" data-url="{{ request.origin }}{{ article.url }}">{% render 'icon', name: 'share' %}{{ 'general.share.label' | t }}</button>
+    </div>
+    {%- if blog.comments_enabled? -%}
+      <section style="margin-top: 56px;" aria-labelledby="CommentsTitle">
+        <h2 class="h3" id="CommentsTitle">{{ 'blogs.comments.title' | t: count: article.comments_count }}</h2>
+        {%- paginate article.comments by 20 -%}
+          <ul class="list-unstyled" role="list" style="display: grid; gap: 20px; margin: 24px 0;">
+            {%- for comment in article.comments -%}
+              <li class="panel"><div class="rte">{{ comment.content }}</div><p style="margin-top: 10px; font-size: .82rem;">{{ comment.author | escape }} · {{ comment.created_at | time_tag: format: 'date' }}</p></li>
+            {%- endfor -%}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+        {%- form 'new_comment', article, class: 'panel' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="form-message form-message--success" role="status">{% if blog.moderated? %}{{ 'blogs.comments.success_moderated' | t }}{% else %}{{ 'blogs.comments.success' | t }}{% endif %}</div>
+          {%- elsif form.errors -%}
+            <div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="form-grid form-grid--2" style="margin-top: 16px;">
+            <div class="field"><label class="field__label" for="CommentAuthor">{{ 'contact.name' | t }}</label><input class="input" id="CommentAuthor" name="comment[author]" value="{{ form.author }}" required autocomplete="name"></div>
+            <div class="field"><label class="field__label" for="CommentEmail">{{ 'contact.email' | t }}</label><input class="input" id="CommentEmail" type="email" name="comment[email]" value="{{ form.email }}" required autocomplete="email"></div>
+            <div class="field span-2"><label class="field__label" for="CommentBody">{{ 'blogs.comments.message' | t }}</label><textarea class="textarea" id="CommentBody" name="comment[body]" required>{{ form.body }}</textarea></div>
+            <div class="span-2"><button type="submit" class="btn">{{ 'blogs.comments.post' | t }}</button></div>
+          </div>
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+  </div>
+</article>
+{% schema %}
+{ "name": "Blog post", "settings": [] }
+{% endschema %}

@@ -1,0 +1,52 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        },
+        "service": {
+          "type": "policies",
+          "settings": {
+            "heading": "Customer service",
+            "contact_page": "contact"
+          }
+        },
+        "contact": {
+          "type": "contact",
+          "settings": {
+            "heading": "Contact",
+            "contact_page": "contact"
+          }
+        },
+        "news": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Stay in the loop",
+            "text": "New drops, restocks and offers. Straight to your inbox."
+          }
+        }
+      },
+      "block_order": [
+        "shop",
+        "service",
+        "contact",
+        "news"
+      ],
+      "settings": {
+        "show_payment_icons": true,
+        "show_policy_links": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

@@ -1,0 +1,20 @@
+<div class="page-width auth">
+  <div class="page-hero center"><p class="eyebrow" style="justify-content:center;">{{ 'customer.eyebrow' | t }}</p><h1 class="h1">{{ 'customer.register.title' | t }}</h1></div>
+  <div class="panel">
+    {%- form 'create_customer', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}<div class="form-message form-message--error" role="alert" tabindex="-1" autofocus>{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="form-grid">
+        <div class="field"><label class="field__label" for="RegisterFirst">{{ 'customer.fields.first_name' | t }}</label><input class="input" name="customer[first_name]" id="RegisterFirst" autocomplete="given-name" value="{{ form.first_name }}"></div>
+        <div class="field"><label class="field__label" for="RegisterLast">{{ 'customer.fields.last_name' | t }}</label><input class="input" name="customer[last_name]" id="RegisterLast" autocomplete="family-name" value="{{ form.last_name }}"></div>
+        <div class="field"><label class="field__label" for="RegisterEmail">{{ 'customer.fields.email' | t }}</label><input class="input" type="email" name="customer[email]" id="RegisterEmail" autocomplete="email" autocapitalize="off" required value="{{ form.email }}"{% if form.errors contains 'email' %} aria-invalid="true"{% endif %}></div>
+        <div class="field"><label class="field__label" for="RegisterPassword">{{ 'customer.fields.password' | t }}</label><input class="input" type="password" name="customer[password]" id="RegisterPassword" autocomplete="new-password" required{% if form.errors contains 'password' %} aria-invalid="true"{% endif %}></div>
+        <label class="checkbox"><input type="checkbox" name="customer[accepts_marketing]" value="true"> {{ 'customer.register.marketing' | t }}</label>
+        <button type="submit" class="btn btn--full">{{ 'customer.register.submit' | t }}</button>
+        <a href="{{ routes.account_login_url }}" class="link" style="justify-self: center;">{{ 'customer.register.have_account' | t }}</a>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Register", "settings": [] }
+{% endschema %}

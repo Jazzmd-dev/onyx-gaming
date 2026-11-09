@@ -1,0 +1,18 @@
+<div class="page-width">
+  <div class="page-hero" style="padding-bottom: 32px;">
+    <p class="eyebrow">{{ 'cart.eyebrow' | t }}</p>
+    <h1 class="h1">{{ 'cart.title' | t }}</h1>
+  </div>
+  <div data-cart-section="main-cart" data-section-key="{{ section.id }}">
+    <div class="{% if cart.item_count > 0 %}cart-page{% else %}page-content{% endif %}">
+      {%- render 'cart-contents', context: 'page' -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": []
+}
+{% endschema %}

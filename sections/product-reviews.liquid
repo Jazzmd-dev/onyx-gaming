@@ -1,0 +1,53 @@
+{%- comment -%}
+  Customer reviews. Reviews come exclusively from your reviews app
+  (add its app block here). The summary reads the standard
+  reviews.rating / reviews.rating_count metafields that review apps populate.
+{%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign has_app = false
+  for block in section.blocks
+    if block.type == '@app'
+      assign has_app = true
+    endif
+  endfor
+-%}
+{%- if has_app or rating_count > 0 -%}
+<section class="section section--flush-top" id="reviews" aria-labelledby="ReviewsTitle-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-header reveal">
+      <div class="section-header__text">
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h2 class="h2" id="ReviewsTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+      </div>
+    </div>
+    {%- if rating_count > 0 -%}
+      <div class="reviews-summary reveal" style="margin-bottom: 32px;">
+        <span class="reviews-summary__score">{{ rating.rating | round: 1 }}</span>
+        <div>
+          {% render 'rating', product: product, show_count: false %}
+          <p style="margin-top: 6px;">{{ 'products.rating.based_on' | t: count: rating_count }}</p>
+        </div>
+      </div>
+    {%- endif -%}
+    {%- for block in section.blocks -%}
+      <div {{ block.shopify_attributes }}>{% render block %}</div>
+    {%- endfor -%}
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Customer reviews",
+  "settings": [
+    { "type": "paragraph", "content": "Add your product reviews app block below. Only genuine reviews collected by your app are displayed — this section stays hidden until reviews exist or an app block is added." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What customers say" }
+  ],
+  "blocks": [{ "type": "@app" }],
+  "presets": [{ "name": "Customer reviews" }],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}

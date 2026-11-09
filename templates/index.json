@@ -1,0 +1,342 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "alignment": "center",
+        "eyebrow": "Next-gen gaming & tech",
+        "heading_line_1": "LEVEL UP",
+        "heading_line_2": "YOUR WORLD.",
+        "text": "<p>Discover the next generation of gaming, technology and electronics. Premium gear. Incredible performance. Everything you need to stay ahead.</p>",
+        "button_label_1": "Shop now",
+        "button_link_1": "/collections/all",
+        "button_label_2": "Explore collections",
+        "button_link_2": "/collections",
+        "overlay": 45,
+        "height_desktop": 92,
+        "height_mobile": 85,
+        "show_ambient": true,
+        "show_scroll_cue": true,
+        "is_page_heading": true
+      }
+    },
+    "trust": {
+      "type": "trust-bar",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout",
+            "text": "Payments are processed securely by Shopify."
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "Shipping options",
+            "text": "Delivery rates and times are shown at checkout."
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "title": "Easy returns",
+            "text": "Read our returns policy before you buy.",
+            "link": "/policies/refund-policy"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "icon": "headset",
+            "title": "Customer support",
+            "text": "Questions? Get in touch with our team.",
+            "link": "/pages/contact"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "categories": {
+      "type": "category-grid",
+      "blocks": {
+        "cat_1": {
+          "type": "category",
+          "settings": {
+            "collection": "gaming-pcs",
+            "title": "Gaming PCs",
+            "size": "large"
+          }
+        },
+        "cat_2": {
+          "type": "category",
+          "settings": {
+            "collection": "gaming-accessories",
+            "title": "Gaming Accessories",
+            "size": "standard"
+          }
+        },
+        "cat_3": {
+          "type": "category",
+          "settings": {
+            "collection": "keyboards",
+            "title": "Keyboards",
+            "size": "standard"
+          }
+        },
+        "cat_4": {
+          "type": "category",
+          "settings": {
+            "collection": "gaming-mice",
+            "title": "Gaming Mice",
+            "size": "standard"
+          }
+        },
+        "cat_5": {
+          "type": "category",
+          "settings": {
+            "collection": "headphones",
+            "title": "Headphones",
+            "size": "standard"
+          }
+        },
+        "cat_6": {
+          "type": "category",
+          "settings": {
+            "collection": "gaming-headsets",
+            "title": "Gaming Headsets",
+            "size": "wide"
+          }
+        },
+        "cat_7": {
+          "type": "category",
+          "settings": {
+            "collection": "monitors",
+            "title": "Monitors",
+            "size": "wide"
+          }
+        },
+        "cat_8": {
+          "type": "category",
+          "settings": {
+            "collection": "consoles",
+            "title": "Consoles",
+            "size": "standard"
+          }
+        },
+        "cat_9": {
+          "type": "category",
+          "settings": {
+            "collection": "smartphones",
+            "title": "Smartphones",
+            "size": "standard"
+          }
+        },
+        "cat_10": {
+          "type": "category",
+          "settings": {
+            "collection": "electronics",
+            "title": "Electronics",
+            "size": "standard"
+          }
+        },
+        "cat_11": {
+          "type": "category",
+          "settings": {
+            "collection": "tech-accessories",
+            "title": "Tech Accessories",
+            "size": "standard"
+          }
+        }
+      },
+      "block_order": [
+        "cat_1",
+        "cat_2",
+        "cat_3",
+        "cat_4",
+        "cat_5",
+        "cat_6",
+        "cat_7",
+        "cat_8",
+        "cat_9",
+        "cat_10",
+        "cat_11"
+      ],
+      "settings": {
+        "eyebrow": "Shop by category",
+        "heading": "Built for every setup.",
+        "link_label": "All collections",
+        "surface": false
+      }
+    },
+    "trending": {
+      "type": "featured-tabs",
+      "blocks": {
+        "tab1": {
+          "type": "tab",
+          "settings": {
+            "label": "Trending",
+            "collection": "trending"
+          }
+        },
+        "tab2": {
+          "type": "tab",
+          "settings": {
+            "label": "Bestsellers",
+            "collection": "bestsellers"
+          }
+        },
+        "tab3": {
+          "type": "tab",
+          "settings": {
+            "label": "New arrivals",
+            "collection": "new-arrivals"
+          }
+        },
+        "tab4": {
+          "type": "tab",
+          "settings": {
+            "label": "Limited offers",
+            "collection": "limited-offers"
+          }
+        }
+      },
+      "block_order": [
+        "tab1",
+        "tab2",
+        "tab3",
+        "tab4"
+      ],
+      "settings": {
+        "eyebrow": "Trending now",
+        "heading": "THE GEAR EVERYONE WANTS.",
+        "text": "<p>Trending products, bestsellers, new arrivals and limited-time offers \u2014 all in one place.</p>",
+        "limit": 8,
+        "columns": 4,
+        "mobile_scroll": false,
+        "surface": false
+      }
+    },
+    "promo": {
+      "type": "promo-banner",
+      "settings": {
+        "eyebrow": "Limited-time offer",
+        "heading": "Upgrade your battlestation.",
+        "text": "<p>Explore our current offers on gaming gear and accessories while they last.</p>",
+        "button_label": "Shop offers",
+        "button_link": "/collections/limited-offers",
+        "end_date": "",
+        "countdown_label": "Offer ends in",
+        "hide_when_expired": true
+      }
+    },
+    "accessories": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Popular gaming accessories",
+        "heading": "Precision in every click.",
+        "collection": "gaming-accessories",
+        "limit": 8,
+        "columns": 4,
+        "layout": "carousel",
+        "link_label": "View all",
+        "surface": false
+      }
+    },
+    "electronics": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Innovative electronics",
+        "heading": "Tech that keeps you ahead.",
+        "collection": "electronics",
+        "limit": 8,
+        "columns": 4,
+        "layout": "grid",
+        "link_label": "View all",
+        "surface": false
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "blocks": {
+        "e": {
+          "type": "eyebrow",
+          "settings": {
+            "text": "Why Onyx"
+          }
+        },
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "Curated gear. Zero compromise."
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We hand-pick gaming hardware and electronics for performance, build quality and design \u2014 so every setup feels as good as it plays.</p>"
+          }
+        },
+        "f": {
+          "type": "feature",
+          "settings": {
+            "items": "Hand-picked gaming and tech gear\nSecure Shopify checkout\nFriendly, responsive support"
+          }
+        },
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Shop all",
+            "link": "/collections/all",
+            "secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "e",
+        "h",
+        "t",
+        "f",
+        "b"
+      ],
+      "settings": {
+        "ratio": "1",
+        "layout": "left",
+        "surface": true
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Join the inner circle",
+        "heading": "Drops, deals & new tech \u2014 first.",
+        "text": "<p>Subscribe for product launches, restocks and exclusive offers.</p>",
+        "button_label": "Subscribe",
+        "note": "No spam. Unsubscribe anytime.",
+        "tight": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trust",
+    "categories",
+    "trending",
+    "promo",
+    "accessories",
+    "electronics",
+    "story",
+    "newsletter"
+  ]
+}

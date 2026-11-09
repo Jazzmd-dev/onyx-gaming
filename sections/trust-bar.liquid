@@ -1,0 +1,68 @@
+<section class="section section--tight" aria-label="{{ 'general.store_benefits' | t }}">
+  <div class="page-width">
+    <ul class="trust list-unstyled reveal" role="list" style="--trust-cols: {{ section.blocks.size | at_most: 4 | at_least: 1 }};">
+      {%- for block in section.blocks -%}
+        <li class="trust__item" {{ block.shopify_attributes }}>
+          <span class="trust__icon">{% render 'icon', name: block.settings.icon %}</span>
+          <div>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="trust__title">{{ block.settings.title | escape }}</a>
+            {%- else -%}
+              <p class="trust__title">{{ block.settings.title | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}<p class="trust__text">{{ block.settings.text | escape }}</p>{%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust bar",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "paragraph", "content": "Only state policies your store actually offers." }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icon",
+          "options": [
+            { "value": "lock", "label": "Lock" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "return", "label": "Return" },
+            { "value": "headset", "label": "Support" },
+            { "value": "card", "label": "Payment card" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "award", "label": "Award" },
+            { "value": "zap", "label": "Lightning" },
+            { "value": "cpu", "label": "Chip" },
+            { "value": "gamepad", "label": "Controller" }
+          ],
+          "default": "lock"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Secure checkout" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Payments are processed securely by Shopify." },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust bar",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "lock", "title": "Secure checkout", "text": "Payments are processed securely by Shopify." } },
+        { "type": "item", "settings": { "icon": "truck", "title": "Shipping options", "text": "Delivery rates and times are shown at checkout." } },
+        { "type": "item", "settings": { "icon": "return", "title": "Returns", "text": "Read our returns policy before you buy." } },
+        { "type": "item", "settings": { "icon": "headset", "title": "Real support", "text": "Questions? Our team is here to help." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

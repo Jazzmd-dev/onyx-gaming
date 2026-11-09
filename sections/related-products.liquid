@@ -1,0 +1,32 @@
+{%- assign header_id = 'RelatedTitle-' | append: section.id -%}
+<section class="section section--flush-top" aria-labelledby="{{ header_id }}">
+  <div class="page-width">
+    <onyx-recommendations
+      data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent={{ section.settings.intent }}"
+    >
+      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+        {% render 'section-header', eyebrow: section.settings.eyebrow, heading: section.settings.heading, id: header_id %}
+        <ul class="grid list-unstyled" role="list" style="--cols-mobile: 2; --cols-tablet: 3; --cols-desktop: {{ section.settings.limit | at_most: 4 }};">
+          {%- for product in recommendations.products -%}
+            <li>{% render 'product-card', product: product, index: forloop.index0 %}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </onyx-recommendations>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Related products",
+  "settings": [
+    { "type": "paragraph", "content": "Powered by Shopify product recommendations. Manage them with the Search & Discovery app." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Complete your setup" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "You may also like" },
+    { "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "select", "id": "intent", "label": "Recommendation type", "options": [ { "value": "related", "label": "Related" }, { "value": "complementary", "label": "Complementary" } ], "default": "related" }
+  ],
+  "presets": [{ "name": "Related products" }],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}

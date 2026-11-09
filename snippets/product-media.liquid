@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders one product media item for the gallery.
+  Params: media, eager (bool), zoom (bool)
+{%- endcomment -%}
+{%- case media.media_type -%}
+  {%- when 'image' -%}
+    <div class="media{% if zoom %} gallery__zoom{% endif %}" style="--ratio: 1;"{% if zoom %} tabindex="0" role="button" aria-label="{{ 'products.product.zoom' | t }}"{% endif %}>
+      {%- if eager -%}
+        {%- assign img_alt = media.alt | default: product.title -%}
+        {{ media | image_url: width: 1800 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1440px) 760px, (min-width: 990px) 52vw, 100vw', widths: '400, 550, 700, 900, 1100, 1400, 1800', alt: img_alt}}
+      {%- else -%}
+        {%- assign img_alt = media.alt | default: product.title -%}
+        {{ media | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 1440px) 760px, (min-width: 990px) 52vw, 100vw', widths: '400, 550, 700, 900, 1100, 1400, 1800', alt: img_alt}}
+      {%- endif -%}
+    </div>
+  {%- when 'video' -%}
+    <div class="media" style="--ratio: 1;">
+      {{ media | video_tag: controls: true, playsinline: true, muted: true, preload: 'metadata', image_size: '1200x' }}
+    </div>
+  {%- when 'external_video' -%}
+    <div class="media" style="--ratio: 1;">
+      {%- assign img_alt = media.alt | default: product.title -%}
+      {{ media | external_video_url: rel: 0, modestbranding: 1 | external_video_tag: loading: 'lazy', title: img_alt }}
+    </div>
+  {%- else -%}
+    <div class="media" style="--ratio: 1;">
+      {%- assign img_alt = media.alt | default: product.title -%}
+      {{ media.preview_image | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 52vw, 100vw', alt: img_alt}}
+    </div>
+{%- endcase -%}

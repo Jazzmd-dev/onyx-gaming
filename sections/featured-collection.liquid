@@ -1,0 +1,68 @@
+{%- liquid
+  assign collection = section.settings.collection
+  assign header_id = 'FCTitle-' | append: section.id
+  assign link_url = collection.url
+-%}
+<section class="section{% if section.settings.surface %} section--surface{% endif %}" aria-labelledby="{{ header_id }}">
+  <div class="page-width">
+    {% render 'section-header',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      text: section.settings.text,
+      link_label: section.settings.link_label,
+      link_url: link_url,
+      id: header_id
+    %}
+    {%- liquid
+      if section.settings.layout == 'carousel'
+        assign list_class = 'scroller list-unstyled'
+        assign list_style = ''
+      else
+        assign cols_tab = section.settings.columns | at_most: 3
+        assign list_class = 'grid list-unstyled'
+        assign list_style = '--cols-mobile: 2; --cols-tablet: ' | append: cols_tab | append: '; --cols-desktop: ' | append: section.settings.columns | append: ';'
+      endif
+    -%}
+    <ul class="{{ list_class }}" role="list" style="{{ list_style }}">
+      {%- if collection != blank and collection.products_count > 0 -%}
+        {%- for product in collection.products limit: section.settings.limit -%}
+          <li>{% render 'product-card', product: product, index: forloop.index0 %}</li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <li>
+            <div class="card">
+              <div class="card__media" style="--card-ratio: {{ settings.card_image_ratio }};">{{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}</div>
+              <div class="card__info"><h3 class="card__title">{{ 'onboarding.product_title' | t }}</h3><div class="price"><span class="price__current">{{ 4999 | money }}</span></div></div>
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+</section>
+{%- if section.settings.layout == 'carousel' -%}
+  {%- assign cols_t = section.settings.columns | at_most: 3 -%}
+  <style>
+    @media (min-width: 750px) { #shopify-section-{{ section.id }} .scroller { --item-w: calc((100% - {{ cols_t | minus: 1 }} * var(--grid-gap)) / {{ cols_t }}); } }
+    @media (min-width: 1200px) { #shopify-section-{{ section.id }} .scroller { --item-w: calc((100% - {{ section.settings.columns | minus: 1 }} * var(--grid-gap)) / {{ section.settings.columns }}); } }
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Just landed" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "New arrivals" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 16, "step": 1, "default": 8 },
+    { "type": "range", "id": "columns", "label": "Desktop columns", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "select", "id": "layout", "label": "Layout", "options": [ { "value": "grid", "label": "Grid" }, { "value": "carousel", "label": "Carousel" } ], "default": "carousel" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "View all" },
+    { "type": "checkbox", "id": "surface", "label": "Use secondary background", "default": false }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

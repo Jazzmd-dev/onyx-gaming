@@ -1,0 +1,420 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Onyx",
+    "theme_version": "1.0.0",
+    "theme_author": "Onyx Gaming",
+    "theme_documentation_url": "https://github.com/jazzmd-dev/onyx-gaming",
+    "theme_support_url": "https://github.com/jazzmd-dev/onyx-gaming/issues"
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image",
+        "info": "SVG or transparent PNG. If empty, the store name is shown as a wordmark."
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Desktop logo width",
+        "min": 60,
+        "max": 260,
+        "step": 5,
+        "unit": "px",
+        "default": 140
+      },
+      {
+        "type": "range",
+        "id": "logo_width_mobile",
+        "label": "Mobile logo width",
+        "min": 50,
+        "max": 180,
+        "step": 5,
+        "unit": "px",
+        "default": 110
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Backgrounds"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Primary background",
+        "default": "#05070B"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Secondary background",
+        "default": "#0B1018"
+      },
+      {
+        "type": "header",
+        "content": "Accents"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Primary accent",
+        "default": "#38BDF8"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_2",
+        "label": "Secondary accent",
+        "default": "#7DD3FC"
+      },
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Main text",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_text_muted",
+        "label": "Secondary text",
+        "default": "#A1AAB8"
+      },
+      {
+        "type": "header",
+        "content": "Status"
+      },
+      {
+        "type": "color",
+        "id": "color_sale",
+        "label": "Sale / discount",
+        "default": "#7DD3FC"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "In stock",
+        "default": "#4ADE80"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Headings",
+        "default": "space_grotesk_n5"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "label": "Heading scale",
+        "min": 80,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body",
+        "default": "inter_n4"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Page width",
+        "min": 1200,
+        "max": 1800,
+        "step": 20,
+        "unit": "px",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "corner_radius",
+        "label": "Corner radius",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 14
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button shape",
+        "options": [
+          {
+            "value": "rounded",
+            "label": "Rounded"
+          },
+          {
+            "value": "pill",
+            "label": "Pill"
+          }
+        ],
+        "default": "pill"
+      }
+    ]
+  },
+  {
+    "name": "Animations",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "animations_enabled",
+        "label": "Reveal sections on scroll",
+        "info": "Animations are always disabled for visitors who prefer reduced motion.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "hover_zoom",
+        "label": "Zoom product images on hover",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "card_show_secondary_image",
+        "label": "Show second image on hover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Show vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_rating",
+        "label": "Show product rating",
+        "info": "Ratings come from the reviews.rating and reviews.rating_count product metafields written by your reviews app. Nothing is shown if a product has no reviews.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_quick_add",
+        "label": "Enable quick add",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_wishlist",
+        "label": "Show wishlist button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "label": "Image ratio",
+        "options": [
+          {
+            "value": "1",
+            "label": "Square"
+          },
+          {
+            "value": "0.8",
+            "label": "Portrait"
+          },
+          {
+            "value": "1.333",
+            "label": "Landscape"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "type": "header",
+        "content": "Badges"
+      },
+      {
+        "type": "paragraph",
+        "content": "Sale badges show the real saving between price and compare-at price. Add product tags 'new', 'bestseller', 'trending' or 'limited' to show those badges."
+      },
+      {
+        "type": "select",
+        "id": "sale_badge_type",
+        "label": "Sale badge",
+        "options": [
+          {
+            "value": "percent",
+            "label": "Percentage saved"
+          },
+          {
+            "value": "amount",
+            "label": "Amount saved"
+          },
+          {
+            "value": "text",
+            "label": "\"Sale\""
+          }
+        ],
+        "default": "percent"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_discount",
+        "label": "Show discount code field",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_note",
+        "label": "Show order note",
+        "default": false
+      },
+      {
+        "type": "collection",
+        "id": "cart_empty_collection",
+        "label": "Empty cart collection"
+      },
+      {
+        "type": "text",
+        "id": "cart_secure_text",
+        "label": "Checkout security text",
+        "default": "Secure checkout powered by Shopify"
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Accounts"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "info": "https://instagram.com/yourstore"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "X / Twitter"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "text",
+        "id": "social_discord_link",
+        "label": "Discord"
+      },
+      {
+        "type": "text",
+        "id": "social_twitch_link",
+        "label": "Twitch"
+      },
+      {
+        "type": "header",
+        "content": "Sharing image"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default social sharing image",
+        "info": "Used when a page has no image of its own. 1200 \u00d7 628px recommended."
+      }
+    ]
+  },
+  {
+    "name": "Store information",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shown in the footer, contact page and structured data. Leave empty to hide."
+      },
+      {
+        "type": "text",
+        "id": "store_email",
+        "label": "Support email"
+      },
+      {
+        "type": "text",
+        "id": "store_phone",
+        "label": "Support phone"
+      },
+      {
+        "type": "text",
+        "id": "store_hours",
+        "label": "Support hours",
+        "info": "e.g. Mon\u2013Fri, 9am\u20136pm"
+      },
+      {
+        "type": "textarea",
+        "id": "store_address",
+        "label": "Address"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Square, at least 180 \u00d7 180px."
+      }
+    ]
+  }
+]

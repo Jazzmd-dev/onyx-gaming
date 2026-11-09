@@ -1,0 +1,26 @@
+{%- liquid
+  assign networks = 'instagram,tiktok,youtube,twitter,facebook,discord,twitch' | split: ','
+  assign labels = 'Instagram,TikTok,YouTube,X,Facebook,Discord,Twitch' | split: ','
+  assign any = false
+  for n in networks
+    assign key = 'social_' | append: n | append: '_link'
+    if settings[key] != blank
+      assign any = true
+    endif
+  endfor
+-%}
+{%- if any -%}
+  <ul class="social list-unstyled" role="list">
+    {%- for n in networks -%}
+      {%- assign key = 'social_' | append: n | append: '_link' -%}
+      {%- if settings[key] != blank -%}
+        <li>
+          <a href="{{ settings[key] }}" target="_blank" rel="noopener" aria-describedby="a11y-new-window">
+            {% render 'icon', name: n %}
+            <span class="visually-hidden">{{ labels[forloop.index0] }}</span>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

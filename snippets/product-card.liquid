@@ -1,0 +1,136 @@
+{%- comment -%}
+  Product card
+  Params:
+  - product: product object (required)
+  - index: position for staggered reveal (optional)
+  - eager: load image eagerly (optional)
+  - sizes: image sizes attribute (optional)
+  - reveal: add reveal animation class (default true)
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 1200px) 320px, (min-width: 750px) 33vw, 50vw'
+  assign first_variant = product.selected_or_first_available_variant
+  assign secondary = nil
+  if settings.card_show_secondary_image and product.media.size > 1
+    assign secondary = product.media[1]
+  endif
+  assign tags = product.tags | join: '|' | downcase | split: '|'
+  assign color_count = 0
+  for option in product.options_with_values
+    assign oname = option.name | downcase
+    if oname == 'color' or oname == 'colour'
+      assign color_count = option.values.size
+    endif
+  endfor
+  assign card_alt = product.featured_media.alt | default: product.title
+  assign primary_class = 'card__img card__img--primary'
+  if secondary
+    assign primary_class = 'card__img card__img--primary has-secondary'
+  endif
+  assign loading = 'lazy'
+  if eager
+    assign loading = 'eager'
+  endif
+-%}
+<div class="card{% unless reveal == false %} reveal{% endunless %}" style="--i: {{ index | default: 0 | modulo: 8 }};">
+  <div class="card__media-wrap">
+    <a href="{{ product.url }}" class="card__media" tabindex="-1" aria-hidden="true" style="--card-ratio: {{ settings.card_image_ratio }};">
+      {%- if product.featured_media -%}
+        {{
+          product.featured_media.preview_image
+          | image_url: width: 900
+          | image_tag:
+            loading: loading,
+            widths: '240, 360, 480, 600, 720, 900',
+            sizes: sizes,
+            alt: card_alt,
+            class: primary_class
+        }}
+        {%- if secondary -%}
+          {{
+            secondary.preview_image
+            | image_url: width: 900
+            | image_tag:
+              loading: 'lazy',
+              widths: '240, 360, 480, 600, 720, 900',
+              sizes: sizes,
+              alt: '',
+              class: 'card__img card__img--secondary'
+          }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </a>
+
+    <div class="card__badges">
+      {%- if product.available == false -%}
+        <span class="badge badge--soldout">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif product.compare_at_price > product.price -%}
+        {%- liquid
+          assign saved = product.compare_at_price | minus: product.price
+          assign pct = saved | times: 100.0 | divided_by: product.compare_at_price | round
+        -%}
+        <span class="badge badge--sale">
+          {%- case settings.sale_badge_type -%}
+            {%- when 'amount' -%}{%- assign saved_money = saved | money -%}{{ 'products.product.save_amount' | t: amount: saved_money }}
+            {%- when 'percent' -%}{{ 'products.product.save_percent' | t: percent: pct }}
+            {%- else -%}{{ 'products.product.on_sale' | t }}
+          {%- endcase -%}
+        </span>
+      {%- endif -%}
+      {%- if tags contains 'limited' -%}<span class="badge badge--hot">{{ 'products.badges.limited' | t }}</span>{%- endif -%}
+      {%- if tags contains 'bestseller' -%}<span class="badge">{{ 'products.badges.bestseller' | t }}</span>
+      {%- elsif tags contains 'trending' -%}<span class="badge">{{ 'products.badges.trending' | t }}</span>{%- endif -%}
+      {%- if tags contains 'new' -%}<span class="badge badge--new">{{ 'products.badges.new' | t }}</span>{%- endif -%}
+    </div>
+
+    {%- if settings.card_show_wishlist -%}
+      <button
+        type="button"
+        class="icon-btn card__wish wish-btn"
+        data-wishlist-toggle
+        data-handle="{{ product.handle }}"
+        data-title="{{ product.title | escape }}"
+        aria-pressed="false"
+        aria-label="{{ 'wishlist.add' | t }}: {{ product.title | escape }}"
+      >
+        {% render 'icon', name: 'heart' %}
+      </button>
+    {%- endif -%}
+
+    {%- if settings.card_quick_add and product.available -%}
+      <div class="card__quick">
+        {%- if product.has_only_default_variant or product.variants.size == 1 -%}
+          {%- form 'product', product, data-product-form: '', data-ajax-always: '', novalidate: 'novalidate' -%}
+            <input type="hidden" name="id" value="{{ first_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn--small" aria-label="{{ 'products.product.add_to_cart' | t }}: {{ product.title | escape }}">
+              {% render 'icon', name: 'cart-plus', class: 'card__quick-icon' %}
+              <span class="btn-label">{{ 'products.product.quick_add' | t }}</span>
+            </button>
+          {%- endform -%}
+        {%- else -%}
+          <a href="{{ product.url }}" class="btn btn--small" aria-label="{{ 'products.product.choose_options' | t }}: {{ product.title | escape }}">
+            {% render 'icon', name: 'arrow-up-right', class: 'card__quick-icon' %}
+            <span class="btn-label">{{ 'products.product.choose_options' | t }}</span>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="card__info">
+    {%- if settings.card_show_vendor and product.vendor != blank -%}
+      <span class="card__vendor">{{ product.vendor | escape }}</span>
+    {%- endif -%}
+    <h3 class="card__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+    {%- if settings.card_show_rating -%}
+      {% render 'rating', product: product, show_count: true %}
+    {%- endif -%}
+    {% render 'price', product: product %}
+    {%- if color_count > 1 -%}
+      <span class="card__options-count">{{ 'products.product.colors_available' | t: count: color_count }}</span>
+    {%- endif -%}
+  </div>
+</div>

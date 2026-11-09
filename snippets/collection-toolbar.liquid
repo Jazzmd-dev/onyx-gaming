@@ -1,0 +1,22 @@
+{%- comment -%} Params: results, section, show_filters, show_sort, count {%- endcomment -%}
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+-%}
+<div class="toolbar">
+  <p class="toolbar__count" data-product-count role="status">{{ 'collections.product_count' | t: count: count }}</p>
+  <div class="toolbar__actions">
+    {%- if show_filters and results.filters.size > 0 -%}
+      <button type="button" class="toolbar__filter-btn" aria-controls="FilterDrawer-{{ section.id }}" aria-expanded="false" data-drawer-open>
+        {% render 'icon', name: 'filter' %}{{ 'collections.filters.title' | t }}
+      </button>
+    {%- endif -%}
+    {%- if show_sort -%}
+      <label class="toolbar__sort-label text-muted" for="SortBy-{{ section.id }}" style="font-size: .85rem;">{{ 'collections.sort.title' | t }}</label>
+      <select id="SortBy-{{ section.id }}" class="select" data-sort name="sort_by">
+        {%- for option in results.sort_options -%}
+          <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+        {%- endfor -%}
+      </select>
+    {%- endif -%}
+  </div>
+</div>

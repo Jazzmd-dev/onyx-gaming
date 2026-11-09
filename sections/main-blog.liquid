@@ -1,0 +1,27 @@
+<div class="page-width">
+  <div class="page-hero">
+    <p class="eyebrow">{{ 'blogs.eyebrow' | t }}</p>
+    <h1 class="h1">{{ blog.title | escape }}</h1>
+    {%- if blog.all_tags.size > 0 -%}
+      <nav class="subcollections" aria-label="{{ 'blogs.tags' | t }}">
+        <a href="{{ blog.url }}" class="chip{% unless current_tags %} is-active{% endunless %}">{{ 'blogs.all' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="chip{% if current_tags contains tag %} is-active{% endif %}">{{ tag | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  </div>
+  {%- paginate blog.articles by 9 -%}
+    <ul class="grid list-unstyled page-content" role="list" style="--cols-mobile: 1; --cols-tablet: 2; --cols-desktop: 3; row-gap: 48px;">
+      {%- for article in blog.articles -%}
+        <li>{% render 'article-card', article: article, index: forloop.index0 %}</li>
+      {%- else -%}
+        <li><p>{{ 'blogs.empty' | t }}</p></li>
+      {%- endfor -%}
+    </ul>
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+{% schema %}
+{ "name": "Blog posts", "settings": [] }
+{% endschema %}

@@ -1,0 +1,15 @@
+<div class="page-width error-page">
+  <div>
+    <p class="eyebrow" style="justify-content: center;">{{ 'templates.404.eyebrow' | t }}</p>
+    <p class="error-page__code text-gradient" aria-hidden="true">404</p>
+    <h1 class="h2">{{ 'templates.404.title' | t }}</h1>
+    <p>{{ 'templates.404.subtext' | t }}</p>
+    <div class="hero__actions">
+      <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'collections.shop_all' | t }} {% render 'icon', name: 'arrow' %}</a>
+      <a href="{{ routes.search_url }}" class="btn btn--secondary" data-search-open>{{ 'header.search' | t }}</a>
+    </div>
+  </div>
+</div>
+{% schema %}
+{ "name": "404", "settings": [] }
+{% endschema %}
