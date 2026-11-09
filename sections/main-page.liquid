@@ -1,0 +1,10 @@
+<div class="page-width page-width--narrow">
+  <div class="page-hero">
+    <h1 class="h1">{{ page.title | escape }}</h1>
+  </div>
+  <div class="rte page-content">{{ page.content }}</div>
+</div>
+
+{% schema %}
+{ "name": "Page", "settings": [] }
+{% endschema %}

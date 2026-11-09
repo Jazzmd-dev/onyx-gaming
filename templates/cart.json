@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {}
+    },
+    "recommend": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Before you go",
+        "heading": "Trending right now",
+        "collection": "trending",
+        "limit": 4,
+        "columns": 4,
+        "layout": "grid",
+        "link_label": "View all"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommend"
+  ]
+}

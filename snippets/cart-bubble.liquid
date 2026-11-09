@@ -1,0 +1,2 @@
+{%- if cart.item_count > 0 -%}<span class="count-bubble" aria-hidden="true">{{ cart.item_count | at_most: 99 }}</span>{%- endif -%}
+<span class="visually-hidden">{{ 'header.cart_count' | t: count: cart.item_count }}</span>

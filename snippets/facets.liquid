@@ -1,0 +1,73 @@
+{%- comment -%}
+  Storefront filtering (Shopify Search & Discovery filters).
+  Params: results (collection or search), id_prefix
+{%- endcomment -%}
+<form data-facets-form class="facets-form" action="{{ request.path }}">
+  {%- if results.terms -%}
+    <input type="hidden" name="q" value="{{ results.terms | escape }}">
+    <input type="hidden" name="options[prefix]" value="last">
+  {%- endif -%}
+  {%- if results.sort_by -%}
+    <input type="hidden" name="sort_by" value="{{ results.sort_by }}">
+  {%- endif -%}
+  {%- for filter in results.filters -%}
+    {%- liquid
+      assign active_count = filter.active_values.size
+      if filter.type == 'price_range'
+        if filter.min_value.value != nil or filter.max_value.value != nil
+          assign active_count = 1
+        endif
+      endif
+    -%}
+    <details class="facet"{% if forloop.index <= 3 or active_count > 0 %} open{% endif %}>
+      <summary>
+        <span>{{ filter.label | escape }}{% if active_count > 0 %} <span class="text-accent">({{ active_count }})</span>{% endif %}</span>
+        {% render 'icon', name: 'chevron-down' %}
+      </summary>
+      {%- case filter.type -%}
+        {%- when 'price_range' -%}
+          {%- liquid
+            assign max_price = filter.range_max | divided_by: 100.0 | ceil
+          -%}
+          <div class="facet__price">
+            <div class="field">
+              <label class="field__label" for="{{ id_prefix }}-{{ filter.min_value.param_name }}">{{ 'collections.filters.from' | t }} ({{ cart.currency.symbol }})</label>
+              <input class="input" data-price-input type="number" inputmode="decimal" min="0" max="{{ max_price }}" placeholder="0"
+                id="{{ id_prefix }}-{{ filter.min_value.param_name }}" name="{{ filter.min_value.param_name }}"
+                value="{%- if filter.min_value.value -%}{{ filter.min_value.value | divided_by: 100.0 }}{%- endif -%}">
+            </div>
+            <div class="field">
+              <label class="field__label" for="{{ id_prefix }}-{{ filter.max_value.param_name }}">{{ 'collections.filters.to' | t }} ({{ cart.currency.symbol }})</label>
+              <input class="input" data-price-input type="number" inputmode="decimal" min="0" max="{{ max_price }}" placeholder="{{ max_price }}"
+                id="{{ id_prefix }}-{{ filter.max_value.param_name }}" name="{{ filter.max_value.param_name }}"
+                value="{%- if filter.max_value.value -%}{{ filter.max_value.value | divided_by: 100.0 }}{%- endif -%}">
+            </div>
+          </div>
+        {%- when 'boolean' -%}
+          <div class="facet__list" role="group" aria-label="{{ filter.label | escape }}">
+            {%- for value in filter.values -%}
+              {%- assign oid = id_prefix | append: '-' | append: filter.param_name | append: '-' | append: forloop.index | handleize -%}
+              <label class="facet__option{% if value.count == 0 and value.active == false %} is-disabled{% endif %}" for="{{ oid }}">
+                <input type="checkbox" id="{{ oid }}" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                <span>{{ value.label | escape }}</span>
+                <span class="facet__count">{{ value.count }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="facet__list" role="group" aria-label="{{ filter.label | escape }}">
+            {%- for value in filter.values -%}
+              {%- assign oid = id_prefix | append: '-' | append: filter.param_name | append: '-' | append: forloop.index | handleize -%}
+              <label class="facet__option{% if value.count == 0 and value.active == false %} is-disabled{% endif %}" for="{{ oid }}">
+                <input type="checkbox" id="{{ oid }}" name="{{ value.param_name }}" value="{{ value.value | escape }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                {%- if value.swatch.color -%}<span class="pill__swatch" style="--swatch: {{ value.swatch.color }}; width: 18px; height: 18px;" aria-hidden="true"></span>{%- endif -%}
+                <span>{{ value.label | escape }}</span>
+                <span class="facet__count">{{ value.count }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+      {%- endcase -%}
+    </details>
+  {%- endfor -%}
+  <noscript><button type="submit" class="btn btn--small" style="margin-top: 16px;">{{ 'collections.filters.apply' | t }}</button></noscript>
+</form>

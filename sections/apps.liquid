@@ -1,0 +1,6 @@
+<div class="page-width section section--tight">
+  {%- for block in section.blocks -%}{% render block %}{%- endfor -%}
+</div>
+{% schema %}
+{ "name": "Apps", "tag": "section", "settings": [], "blocks": [{ "type": "@app" }], "presets": [{ "name": "Apps" }] }
+{% endschema %}

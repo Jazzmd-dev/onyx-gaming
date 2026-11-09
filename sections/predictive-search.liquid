@@ -1,0 +1,45 @@
+{%- comment -%} Rendered by the Predictive Search API (section_id=predictive-search). {%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- assign products = predictive_search.resources.products -%}
+  {%- assign collections = predictive_search.resources.collections -%}
+  {%- assign queries = predictive_search.resources.queries -%}
+  {%- if products.size > 0 or collections.size > 0 or queries.size > 0 -%}
+    {%- if queries.size > 0 or collections.size > 0 -%}
+      <div class="predictive__queries">
+        {%- for q in queries -%}
+          <a href="{{ q.url }}">{% render 'icon', name: 'search', class: 'icon--sm' %}{{ q.styled_text }}</a>
+        {%- endfor -%}
+        {%- for c in collections -%}
+          <a href="{{ c.url }}">{{ c.title | escape }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    {%- if products.size > 0 -%}
+      <p class="predictive__group-title" id="PredictiveProductsTitle">{{ 'search.products' | t }}</p>
+      <ul class="predictive__products list-unstyled" role="listbox" aria-labelledby="PredictiveProductsTitle">
+        {%- for product in products -%}
+          <li role="presentation">
+            <a href="{{ product.url }}" class="predictive__item" role="option" aria-selected="false" id="predictive-{{ forloop.index }}">
+              <div class="media" style="--ratio: 1;">
+                {%- if product.featured_media -%}
+                  {{ product.featured_media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <div>
+                <p class="predictive__item-title">{{ product.title | escape }}</p>
+                {% render 'price', product: product %}
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    <div class="predictive__all">
+      <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&options%5Bprefix%5D=last" class="link">{{ 'search.view_all' | t: terms: predictive_search.terms }} {% render 'icon', name: 'arrow' %}</a>
+    </div>
+  {%- else -%}
+    <p class="predictive__empty">{{ 'search.no_results' | t: terms: predictive_search.terms }}</p>
+  {%- endif -%}
+{%- endif -%}

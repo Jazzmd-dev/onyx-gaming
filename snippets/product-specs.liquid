@@ -1,0 +1,42 @@
+{%- comment -%}
+  Product specifications.
+  Source: product metafield custom.specifications
+    - Multi-line text: one "Label: Value" per line
+    - Rich text / other: rendered as-is
+  Falls back to real product data (brand, type, SKU, barcode, weight).
+{%- endcomment -%}
+{%- assign specs = product.metafields.custom.specifications -%}
+{%- if specs != blank and specs.type == 'multi_line_text_field' -%}
+  {%- assign lines = specs.value | newline_to_br | split: '<br />' -%}
+  <table class="specs">
+    <tbody>
+      {%- for line in lines -%}
+        {%- assign l = line | strip -%}
+        {%- if l != blank -%}
+          {%- if l contains ':' -%}
+            {%- assign label = l | split: ':' | first -%}
+            {%- assign value = l | remove_first: label | remove_first: ':' | strip -%}
+            <tr><th scope="row">{{ label | strip | escape }}</th><td>{{ value | escape }}</td></tr>
+          {%- else -%}
+            <tr><td colspan="2">{{ l | escape }}</td></tr>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </tbody>
+  </table>
+{%- elsif specs != blank -%}
+  {{ specs | metafield_tag }}
+{%- else -%}
+  <table class="specs">
+    <tbody>
+      {%- if product.vendor != blank -%}<tr><th scope="row">{{ 'products.specs.brand' | t }}</th><td>{{ product.vendor | escape }}</td></tr>{%- endif -%}
+      {%- if product.type != blank -%}<tr><th scope="row">{{ 'products.specs.type' | t }}</th><td>{{ product.type | escape }}</td></tr>{%- endif -%}
+      {%- for option in product.options_with_values -%}
+        <tr><th scope="row">{{ option.name | escape }}</th><td>{{ option.values | join: ', ' | escape }}</td></tr>
+      {%- endfor -%}
+      {%- if variant.sku != blank -%}<tr><th scope="row">{{ 'products.product.sku' | t }}</th><td>{{ variant.sku | escape }}</td></tr>{%- endif -%}
+      {%- if variant.barcode != blank -%}<tr><th scope="row">{{ 'products.specs.barcode' | t }}</th><td>{{ variant.barcode | escape }}</td></tr>{%- endif -%}
+      {%- if variant.weight > 0 -%}<tr><th scope="row">{{ 'products.specs.weight' | t }}</th><td>{{ variant.weight | weight_with_unit: variant.weight_unit }}</td></tr>{%- endif -%}
+    </tbody>
+  </table>
+{%- endif -%}

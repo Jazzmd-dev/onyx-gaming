@@ -1,0 +1,63 @@
+{%- comment -%}
+  Params: product (required), variant (optional), large (bool), show_save (bool), use_variant (bool)
+{%- endcomment -%}
+{%- liquid
+  if use_variant
+    assign target = variant | default: product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  if use_variant
+    assign price = target.price
+    assign compare_at = target.compare_at_price
+  else
+    assign price = product.price_min
+    assign compare_at = product.compare_at_price_min
+    if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price
+      assign price = product.selected_or_first_available_variant.price
+      assign compare_at = product.selected_or_first_available_variant.compare_at_price
+    endif
+  endif
+
+  assign on_sale = false
+  if compare_at > price
+    assign on_sale = true
+  endif
+  assign varies = false
+  if use_variant != true and product.price_varies
+    assign varies = true
+  endif
+
+  if settings.sale_badge_type == 'amount'
+    assign save_template = 'products.product.save_amount' | t: amount: '[amount]'
+  else
+    assign save_template = 'products.product.save_percent' | t: percent: '[pct]'
+  endif
+-%}
+<div
+  class="price{% if on_sale %} price--sale{% endif %}{% if large %} price--large{% endif %}"
+  {% if use_variant %}data-price data-show-save="{{ show_save | default: false }}" data-save-template="{{ save_template | escape }}" data-regular-label="{{ 'products.product.regular_price' | t | escape }}"{% endif %}
+>
+  <span class="price__current">
+    {%- if varies -%}<span class="price__from">{{ 'products.product.from' | t }}</span> {% endif -%}
+    {{- price | money -}}
+  </span>
+  {%- if on_sale -%}
+    <s class="price__compare"><span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>{{ compare_at | money }}</s>
+    {%- if show_save -%}
+      {%- liquid
+        assign saved = compare_at | minus: price
+        assign pct = saved | times: 100.0 | divided_by: compare_at | round
+      -%}
+      {%- assign saved_money = saved | money -%}
+      {%- assign pct_str = pct | append: '' -%}
+      <span class="price__save">{{ save_template | replace: '[pct]', pct_str | replace: '[amount]', saved_money }}</span>
+    {%- endif -%}
+  {%- endif -%}
+  {%- if use_variant and target.unit_price_measurement -%}
+    <span class="price__unit">
+      {{- target.unit_price | money }}/{% if target.unit_price_measurement.reference_value != 1 %}{{ target.unit_price_measurement.reference_value }}{% endif %}{{ target.unit_price_measurement.reference_unit -}}
+    </span>
+  {%- endif -%}
+</div>

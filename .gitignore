@@ -1,0 +1,5 @@
+node_modules/
+.shopify/
+*.log
+.DS_Store
+onyx-theme.zip

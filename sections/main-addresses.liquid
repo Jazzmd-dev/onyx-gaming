@@ -1,0 +1,55 @@
+<div class="page-width">
+  <div class="page-hero">
+    <a href="{{ routes.account_url }}" class="link">{% render 'icon', name: 'chevron-left' %} {{ 'customer.account.return' | t }}</a>
+    <h1 class="h1">{{ 'customer.addresses.title' | t }}</h1>
+  </div>
+  {%- paginate customer.addresses by 10 -%}
+    <div class="account-grid">
+      <div style="display: grid; gap: 16px; align-content: start;">
+        {%- for address in customer.addresses -%}
+          <div class="panel">
+            {%- if address == customer.default_address -%}<span class="badge badge--new" style="margin-bottom: 12px;">{{ 'customer.addresses.default' | t }}</span>{%- endif -%}
+            {{ address | format_address }}
+            <details style="margin-top: 16px;">
+              <summary class="btn btn--secondary btn--small">{{ 'customer.addresses.edit' | t }}</summary>
+              <div style="margin-top: 16px;">
+                {%- form 'customer_address', address -%}
+                  {% render 'address-fields', form: form, prefix: address.id %}
+                  <div style="display:flex; gap: 10px; margin-top: 16px;"><button type="submit" class="btn btn--small">{{ 'customer.addresses.update' | t }}</button></div>
+                {%- endform -%}
+              </div>
+            </details>
+            <form method="post" action="{{ address.url }}" style="margin-top: 10px;" onsubmit="return confirm('{{ 'customer.addresses.delete_confirm' | t | escape }}');">
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" class="cart-item__remove">{{ 'customer.addresses.delete' | t }}</button>
+            </form>
+          </div>
+        {%- endfor -%}
+        {% render 'pagination', paginate: paginate %}
+      </div>
+      <div class="panel">
+        <h2 class="h4" style="margin-bottom: 16px;">{{ 'customer.addresses.add' | t }}</h2>
+        {%- form 'customer_address', customer.new_address -%}
+          {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+          {% render 'address-fields', form: form, prefix: 'new' %}
+          <button type="submit" class="btn" style="margin-top: 16px;">{{ 'customer.addresses.add' | t }}</button>
+        {%- endform -%}
+      </div>
+    </div>
+  {%- endpaginate -%}
+</div>
+<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (!window.Shopify || !Shopify.CountryProvinceSelector) return;
+    document.querySelectorAll('[data-address-country]').forEach(function (select) {
+      var id = select.id;
+      var province = select.getAttribute('data-province-id');
+      var container = select.getAttribute('data-province-container');
+      new Shopify.CountryProvinceSelector(id, province, { hideElement: container });
+    });
+  });
+</script>
+{% schema %}
+{ "name": "Addresses", "settings": [] }
+{% endschema %}

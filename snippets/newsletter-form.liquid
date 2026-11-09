@@ -1,0 +1,36 @@
+{%- comment -%} Params: form_id (required), button_label {%- endcomment -%}
+{%- liquid
+  assign label = 'newsletter.button' | t
+  if button_label != blank
+    assign label = button_label
+  endif
+-%}
+{%- form 'customer', id: form_id, class: 'newsletter-form-wrap' -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  {%- if form.posted_successfully? -%}
+    <div class="form-message form-message--success" role="status" tabindex="-1" autofocus>
+      {% render 'icon', name: 'check' %}<span>{{ 'newsletter.success' | t }}</span>
+    </div>
+  {%- else -%}
+    <div class="newsletter-form">
+      <label for="{{ form_id }}-email" class="visually-hidden">{{ 'newsletter.label' | t }}</label>
+      <input
+        id="{{ form_id }}-email"
+        type="email"
+        name="contact[email]"
+        class="input"
+        value="{{ form.email }}"
+        placeholder="{{ 'newsletter.placeholder' | t }}"
+        autocomplete="email"
+        autocapitalize="off"
+        spellcheck="false"
+        required
+        {% if form.errors %}aria-invalid="true" aria-describedby="{{ form_id }}-error"{% endif %}
+      >
+      <button type="submit" class="btn" name="commit">{{ label | escape }}</button>
+    </div>
+    {%- if form.errors -%}
+      <div class="form-message form-message--error" id="{{ form_id }}-error" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endform -%}

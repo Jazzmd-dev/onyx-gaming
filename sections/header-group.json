@@ -1,0 +1,71 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "a1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Secure checkout powered by Shopify",
+            "link": ""
+          }
+        },
+        "a2": {
+          "type": "announcement",
+          "settings": {
+            "text": "New gaming gear just dropped \u2014 shop the latest arrivals",
+            "link": "/collections/new-arrivals"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2"
+      ],
+      "settings": {
+        "speed": 5
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "promo_gaming": {
+          "type": "promo",
+          "settings": {
+            "menu_item": "Gaming",
+            "eyebrow": "Featured",
+            "heading": "Build your ultimate battlestation",
+            "link": "/collections/gaming",
+            "link_label": "Shop gaming"
+          }
+        },
+        "promo_elec": {
+          "type": "promo",
+          "settings": {
+            "menu_item": "Electronics",
+            "eyebrow": "Featured",
+            "heading": "Next-gen tech, curated",
+            "link": "/collections/electronics",
+            "link_label": "Shop electronics"
+          }
+        }
+      },
+      "block_order": [
+        "promo_gaming",
+        "promo_elec"
+      ],
+      "settings": {
+        "menu": "main-menu",
+        "hide_on_scroll": false,
+        "show_wishlist": true,
+        "search_suggestions": "Gaming headset, Mechanical keyboard, 4K monitor, Controller"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

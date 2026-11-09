@@ -1,0 +1,70 @@
+{%- comment -%}
+  Limited-time offer banner. The countdown only renders when the merchant sets a
+  real end date, and the section hides itself once that date has passed.
+{%- endcomment -%}
+{%- liquid
+  assign end_date = section.settings.end_date | strip
+  assign expired = false
+  if end_date != blank
+    assign end_ts = end_date | date: '%s' | plus: 0
+    assign now_ts = 'now' | date: '%s' | plus: 0
+    if end_ts > 0 and end_ts < now_ts and section.settings.hide_when_expired
+      assign expired = true
+    endif
+  endif
+-%}
+{%- unless expired -%}
+<section class="section section--tight" data-hide-when-expired{% unless section.settings.hide_when_expired %}-off{% endunless %}>
+  <div class="page-width">
+    <div class="promo reveal">
+      {%- if section.settings.image != blank -%}
+        <div class="promo__media" aria-hidden="true">
+          {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'lazy', sizes: '(min-width: 1440px) 1440px, 100vw', widths: '600, 900, 1200, 1600, 2000, 2400', alt: '' }}
+        </div>
+      {%- endif -%}
+      <div class="promo__inner">
+        <div class="promo__copy">
+          {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+          <h2 class="h2">{{ section.settings.heading | escape }}</h2>
+          {%- if section.settings.text != blank -%}<div class="rte">{{ section.settings.text }}</div>{%- endif -%}
+          {%- if section.settings.button_label != blank -%}
+            <div class="hero__actions" style="padding-top: 6px;">
+              <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">{{ section.settings.button_label | escape }} {% render 'icon', name: 'arrow' %}</a>
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if end_date != blank -%}
+          <div>
+            <p class="eyebrow" style="margin-bottom: 14px;">{{ section.settings.countdown_label | escape }}</p>
+            <onyx-countdown class="countdown" data-end="{{ end_date | escape }}" role="timer" aria-label="{{ section.settings.countdown_label | escape }}">
+              <div class="countdown__unit"><span class="countdown__value" data-d>00</span><span class="countdown__label">{{ 'general.time.days' | t }}</span></div>
+              <div class="countdown__unit"><span class="countdown__value" data-h>00</span><span class="countdown__label">{{ 'general.time.hours' | t }}</span></div>
+              <div class="countdown__unit"><span class="countdown__value" data-m>00</span><span class="countdown__label">{{ 'general.time.minutes' | t }}</span></div>
+              <div class="countdown__unit"><span class="countdown__value" data-s>00</span><span class="countdown__label">{{ 'general.time.seconds' | t }}</span></div>
+            </onyx-countdown>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Limited-time offer",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Limited-time offer" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Upgrade your battlestation." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Describe the real offer here, such as the products included and any terms.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the offer" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Countdown" },
+    { "type": "text", "id": "end_date", "label": "Offer end date", "info": "Format: 2026-12-31T23:59:00Z (UTC) or with an offset, e.g. 2026-12-31T23:59:00-05:00. Leave empty to hide the countdown." },
+    { "type": "text", "id": "countdown_label", "label": "Countdown label", "default": "Offer ends in" },
+    { "type": "checkbox", "id": "hide_when_expired", "label": "Hide section after the end date", "default": true }
+  ],
+  "presets": [{ "name": "Limited-time offer" }]
+}
+{% endschema %}

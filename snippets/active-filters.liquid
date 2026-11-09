@@ -1,0 +1,25 @@
+{%- comment -%} Params: results, clear_url {%- endcomment -%}
+<div class="active-filters" data-active-filters>
+  {%- assign any_active = false -%}
+  {%- for filter in results.filters -%}
+    {%- for value in filter.active_values -%}
+      {%- assign any_active = true -%}
+      <a href="{{ value.url_to_remove }}" class="chip" data-facet-link>
+        {{ filter.label | escape }}: {{ value.label | escape }} {% render 'icon', name: 'close' %}
+        <span class="visually-hidden">{{ 'collections.filters.remove' | t }}</span>
+      </a>
+    {%- endfor -%}
+    {%- if filter.type == 'price_range' -%}
+      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+        {%- assign any_active = true -%}
+        <a href="{{ filter.url_to_remove }}" class="chip" data-facet-link>
+          {{ filter.min_value.value | default: 0 | money }} – {{ filter.max_value.value | default: filter.range_max | money }} {% render 'icon', name: 'close' %}
+          <span class="visually-hidden">{{ 'collections.filters.remove' | t }}</span>
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if any_active -%}
+    <a href="{{ clear_url }}" class="chip" data-facet-link style="border-color: transparent; text-decoration: underline;">{{ 'collections.filters.clear_all' | t }}</a>
+  {%- endif -%}
+</div>

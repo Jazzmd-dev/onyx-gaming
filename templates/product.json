@@ -1,0 +1,132 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_sku": true
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "stock": {
+          "type": "stock",
+          "settings": {}
+        },
+        "variants": {
+          "type": "variant_picker",
+          "settings": {
+            "style": "pills"
+          }
+        },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": true,
+            "show_dynamic_checkout": true
+          }
+        },
+        "assurance": {
+          "type": "assurance",
+          "settings": {}
+        },
+        "desc": {
+          "type": "description",
+          "settings": {
+            "truncate": true
+          }
+        },
+        "specs": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Specifications",
+            "icon": "cpu",
+            "source": "specs",
+            "open": false
+          }
+        },
+        "shipping": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Delivery information",
+            "icon": "truck",
+            "source": "shipping_policy",
+            "content": "<p>Shipping options, rates and estimated delivery dates are calculated at checkout based on your address.</p>",
+            "open": false
+          }
+        },
+        "returns": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Returns",
+            "icon": "return",
+            "source": "refund_policy",
+            "open": false
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "stock",
+        "variants",
+        "buy",
+        "assurance",
+        "desc",
+        "specs",
+        "shipping",
+        "returns",
+        "share"
+      ],
+      "settings": {
+        "enable_zoom": true,
+        "sticky_atc": true,
+        "low_stock_threshold": 5
+      }
+    },
+    "details": {
+      "type": "product-details",
+      "settings": {
+        "eyebrow": "In detail",
+        "heading": "Product details",
+        "show_specs": true,
+        "specs_heading": "Specifications"
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "eyebrow": "Reviews",
+        "heading": "What customers say"
+      }
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "eyebrow": "Complete your setup",
+        "heading": "You may also like",
+        "limit": 4,
+        "intent": "related"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "details",
+    "reviews",
+    "related"
+  ]
+}

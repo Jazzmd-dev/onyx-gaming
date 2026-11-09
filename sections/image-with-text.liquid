@@ -1,0 +1,59 @@
+<section class="section{% if section.settings.surface %} section--surface{% endif %}">
+  <div class="page-width">
+    <div class="split{% if section.settings.layout == 'right' %} split--reverse{% endif %}">
+      <div class="split__media reveal">
+        <div class="media" style="--ratio: {{ section.settings.ratio }};">
+          {%- if section.settings.image != blank -%}
+            {{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 50vw, 100vw', widths: '400, 600, 800, 1000, 1300, 1600', alt: section.settings.image.alt}}
+          {%- else -%}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="split__copy reveal" style="--i: 1;">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'eyebrow' -%}<p class="eyebrow" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+            {%- when 'heading' -%}<h2 class="h2" {{ block.shopify_attributes }}>{{ block.settings.heading | escape }}</h2>
+            {%- when 'text' -%}<div class="rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+            {%- when 'feature' -%}
+              <ul class="split__list list-unstyled" role="list" {{ block.shopify_attributes }}>
+                {%- assign lines = block.settings.items | newline_to_br | split: '<br />' -%}
+                {%- for line in lines -%}
+                  {%- assign l = line | strip -%}
+                  {%- if l != blank -%}<li>{% render 'icon', name: 'check' %}<span>{{ l | escape }}</span></li>{%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- when 'button' -%}
+              {%- if block.settings.label != blank -%}
+                <div class="hero__actions" {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.link | default: routes.all_products_collection_url }}" class="btn{% if block.settings.secondary %} btn--secondary{% endif %}">{{ block.settings.label | escape }} {% render 'icon', name: 'arrow' %}</a>
+                </div>
+              {%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "ratio", "label": "Image ratio", "options": [ { "value": "1", "label": "Square" }, { "value": "0.8", "label": "Portrait" }, { "value": "1.333", "label": "Landscape" } ], "default": "1" },
+    { "type": "select", "id": "layout", "label": "Image position", "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ], "default": "left" },
+    { "type": "checkbox", "id": "surface", "label": "Use secondary background", "default": false }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Eyebrow", "limit": 1, "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Why Onyx" } ] },
+    { "type": "heading", "name": "Heading", "limit": 1, "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Curated gear. Zero compromise." } ] },
+    { "type": "text", "name": "Text", "settings": [ { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Tell customers what makes your store different: how you choose products, who you are, and how you support them.</p>" } ] },
+    { "type": "feature", "name": "Checklist", "settings": [ { "type": "textarea", "id": "items", "label": "Items (one per line)", "default": "Hand-picked gaming and tech gear\nSecure checkout\nFriendly, responsive support" } ] },
+    { "type": "button", "name": "Button", "settings": [ { "type": "text", "id": "label", "label": "Label", "default": "Shop all" }, { "type": "url", "id": "link", "label": "Link" }, { "type": "checkbox", "id": "secondary", "label": "Outline style", "default": false } ] }
+  ],
+  "presets": [{ "name": "Image with text", "blocks": [ { "type": "eyebrow" }, { "type": "heading" }, { "type": "text" }, { "type": "feature" }, { "type": "button" } ] }]
+}
+{% endschema %}

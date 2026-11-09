@@ -1,0 +1,17 @@
+{%- comment -%}
+  Fallback navigation shown until a "main-menu" is configured in
+  Online Store > Navigation. Links point at the collections created in the setup guide.
+{%- endcomment -%}
+{%- liquid
+  assign titles = 'Home|Shop All|Gaming|Electronics|Trending|Bestsellers|Contact' | split: '|'
+  assign urls = routes.root_url | append: '|' | append: routes.all_products_collection_url | append: '|' | append: routes.collections_url | append: '/gaming|' | append: routes.collections_url | append: '/electronics|' | append: routes.collections_url | append: '/trending|' | append: routes.collections_url | append: '/bestsellers|' | append: routes.root_url | append: 'pages/contact'
+  assign urls = urls | replace: '//pages', '/pages' | split: '|'
+-%}
+{%- for title in titles -%}
+  {%- assign url = urls[forloop.index0] -%}
+  {%- if style == 'mobile' -%}
+    <li class="mobile-nav__item"><a href="{{ url }}" class="mobile-nav__link"{% if request.path == url %} aria-current="page"{% endif %}>{{ title }} {% render 'icon', name: 'arrow' %}</a></li>
+  {%- else -%}
+    <li class="nav__item"><a href="{{ url }}" class="nav__link"{% if request.path == url %} aria-current="page"{% endif %}>{{ title }}</a></li>
+  {%- endif -%}
+{%- endfor -%}

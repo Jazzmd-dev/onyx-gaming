@@ -1,0 +1,129 @@
+{%- liquid
+  assign col_count = 0
+  for block in section.blocks
+    unless block.type == 'newsletter'
+      assign col_count = col_count | plus: 1
+    endunless
+  endfor
+-%}
+<footer class="footer" style="--footer-cols: {{ col_count | at_least: 1 }};">
+  <div class="page-width">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}" style="display:inline-flex;">
+          {%- if section.settings.logo != blank -%}
+            {{ section.settings.logo | image_url: width: 320 | image_tag: loading: 'lazy', style: 'width: 150px; height: auto;', alt: shop.name }}
+          {%- elsif settings.logo != blank -%}
+            {{ settings.logo | image_url: width: 320 | image_tag: loading: 'lazy', style: 'width: 150px; height: auto;', alt: shop.name }}
+          {%- else -%}
+            <span class="wordmark">{% render 'icon', name: 'logo-mark', class: 'wordmark__mark' %}<span>{{ shop.name }}</span></span>
+          {%- endif -%}
+        </a>
+        {%- if section.settings.about != blank -%}
+          <div class="rte">{{ section.settings.about }}</div>
+        {%- endif -%}
+        {% render 'social-links' %}
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            {%- if block.settings.menu != blank -%}
+              <div class="footer__col" {{ block.shopify_attributes }}>
+                <details open>
+                  <summary><h2 class="footer__heading">{{ block.settings.heading | default: block.settings.menu.title | escape }}</h2>{% render 'icon', name: 'plus' %}</summary>
+                  <ul class="footer__links list-unstyled" role="list">
+                    {%- for link in block.settings.menu.links -%}
+                      <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              </div>
+            {%- endif -%}
+          {%- when 'policies' -%}
+            <div class="footer__col" {{ block.shopify_attributes }}>
+              <details open>
+                <summary><h2 class="footer__heading">{{ block.settings.heading | escape }}</h2>{% render 'icon', name: 'plus' %}</summary>
+                <ul class="footer__links list-unstyled" role="list">
+                  {%- if block.settings.contact_page != blank -%}
+                    <li><a href="{{ block.settings.contact_page.url }}">{{ block.settings.contact_page.title | escape }}</a></li>
+                  {%- endif -%}
+                  {%- for policy in shop.policies -%}
+                    {%- if policy.body != blank -%}
+                      <li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if shop.customer_accounts_enabled -%}
+                    <li><a href="{{ routes.account_url }}">{{ 'header.account' | t }}</a></li>
+                  {%- endif -%}
+                </ul>
+              </details>
+            </div>
+          {%- when 'contact' -%}
+            <div class="footer__col" {{ block.shopify_attributes }}>
+              <details open>
+                <summary><h2 class="footer__heading">{{ block.settings.heading | escape }}</h2>{% render 'icon', name: 'plus' %}</summary>
+                <ul class="footer__contact list-unstyled" role="list" style="padding-bottom: 12px;">
+                  {%- if settings.store_email != blank -%}
+                    <li>{% render 'icon', name: 'mail' %}<a href="mailto:{{ settings.store_email }}">{{ settings.store_email | escape }}</a></li>
+                  {%- endif -%}
+                  {%- if settings.store_phone != blank -%}
+                    <li>{% render 'icon', name: 'phone' %}<a href="tel:{{ settings.store_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}">{{ settings.store_phone | escape }}</a></li>
+                  {%- endif -%}
+                  {%- if settings.store_hours != blank -%}
+                    <li>{% render 'icon', name: 'clock' %}<span>{{ settings.store_hours | escape }}</span></li>
+                  {%- endif -%}
+                  {%- if settings.store_address != blank -%}
+                    <li>{% render 'icon', name: 'pin' %}<span>{{ settings.store_address | escape | newline_to_br }}</span></li>
+                  {%- endif -%}
+                  {%- if block.settings.contact_page != blank -%}
+                    <li>{% render 'icon', name: 'headset' %}<a href="{{ block.settings.contact_page.url }}">{{ 'footer.contact_us' | t }}</a></li>
+                  {%- endif -%}
+                </ul>
+              </details>
+            </div>
+          {%- when 'newsletter' -%}
+            {%- assign form_id = 'FooterNewsletter-' | append: block.id -%}
+            <div class="footer__news" {{ block.shopify_attributes }}>
+              <h2 class="footer__heading">{{ block.settings.heading | escape }}</h2>
+              {%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}
+              {% render 'newsletter-form', form_id: form_id %}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}. {{ 'footer.rights' | t }}</p>
+      {%- if section.settings.show_policy_links -%}
+        <ul class="footer__legal list-unstyled" role="list">
+          {%- for policy in shop.policies -%}
+            {%- if policy.body != blank -%}<li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>{%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.show_payment_icons -%}
+        {% render 'payment-icons' %}
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Footer logo", "info": "Defaults to the store logo." },
+    { "type": "richtext", "id": "about", "label": "About the store", "default": "<p>Premium gaming gear and next-generation electronics, curated for players and creators who demand more.</p>" },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "checkbox", "id": "show_policy_links", "label": "Show policy links", "info": "Add policies in Settings › Policies.", "default": true }
+  ],
+  "blocks": [
+    { "type": "menu", "name": "Menu", "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" }, { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" } ] },
+    { "type": "policies", "name": "Customer service", "limit": 1, "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Customer service" }, { "type": "page", "id": "contact_page", "label": "Contact page" } ] },
+    { "type": "contact", "name": "Contact info", "limit": 1, "settings": [ { "type": "paragraph", "content": "Edit details in Theme settings › Store information." }, { "type": "text", "id": "heading", "label": "Heading", "default": "Contact" }, { "type": "page", "id": "contact_page", "label": "Contact page" } ] },
+    { "type": "newsletter", "name": "Newsletter", "limit": 1, "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Stay in the loop" }, { "type": "text", "id": "text", "label": "Text", "default": "New drops, restocks and offers. Straight to your inbox." } ] }
+  ]
+}
+{% endschema %}

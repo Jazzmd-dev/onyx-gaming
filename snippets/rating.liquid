@@ -1,0 +1,24 @@
+{%- comment -%}
+  Renders a product's real rating from standard review metafields
+  (reviews.rating / reviews.rating_count). Renders nothing if absent.
+  Params: product, show_count (default true), link (optional anchor)
+{%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+-%}
+{%- if rating != blank and rating_count > 0 -%}
+  {%- capture inner -%}
+    <span class="rating__stars" style="--rating: {{ rating.rating }}; --rating-max: {{ rating.scale_max }};" aria-hidden="true"></span>
+    <span class="visually-hidden">{{ 'products.rating.label' | t: rating: rating.rating, max: rating.scale_max }}</span>
+    {%- unless show_count == false -%}
+      <span aria-hidden="true">{{ rating.rating | round: 1 }} <span class="rating__count">({{ rating_count }})</span></span>
+      <span class="visually-hidden">{{ 'products.rating.count' | t: count: rating_count }}</span>
+    {%- endunless -%}
+  {%- endcapture -%}
+  {%- if link != blank -%}
+    <a href="{{ link }}" class="rating">{{ inner }}</a>
+  {%- else -%}
+    <div class="rating">{{ inner }}</div>
+  {%- endif -%}
+{%- endif -%}

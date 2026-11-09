@@ -1,0 +1,119 @@
+{%- liquid
+  assign show_filters = section.settings.enable_filtering
+  assign layout_class = ''
+  if show_filters and collection.filters.size > 0 and section.settings.filter_layout == 'sidebar'
+    assign layout_class = 'collection-layout--sidebar'
+  endif
+  assign clear_url = collection.url
+  if collection.sort_by
+    assign clear_url = collection.url | append: '?sort_by=' | append: collection.sort_by
+  endif
+-%}
+
+<div class="collection-hero">
+  {%- if section.settings.show_image and collection.image -%}
+    <div class="collection-hero__media" aria-hidden="true">
+      {{ collection.image | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '600, 900, 1200, 1600, 2000', alt: '' }}
+    </div>
+  {%- endif -%}
+  <div class="page-width">
+    <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.label' | t }}" style="padding-top: 0;">
+      <ol>
+        <li><a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+        <li><a href="{{ routes.collections_url }}">{{ 'collections.title' | t }}</a></li>
+        <li><span aria-current="page">{{ collection.title | escape }}</span></li>
+      </ol>
+    </nav>
+    <div class="collection-hero__copy">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="h1">{{ collection.title | escape }}</h1>
+      {%- if section.settings.show_description and collection.description != blank -%}
+        <div class="rte">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.quick_links != blank and section.settings.quick_links.links.size > 0 -%}
+      <nav class="subcollections" aria-label="{{ 'collections.quick_links' | t }}">
+        {%- for link in section.settings.quick_links.links -%}
+          <a href="{{ link.url }}" class="chip{% if link.active %} is-active{% endif %}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  </div>
+</div>
+
+<onyx-facets class="page-width" data-section-id="{{ section.id }}" style="display: block;">
+  {%- paginate collection.products by section.settings.per_page -%}
+    <div class="collection-layout {{ layout_class }}">
+      {%- if layout_class != blank -%}
+        <aside class="facets" aria-label="{{ 'collections.filters.title' | t }}" data-facets-sidebar>
+          {% render 'facets', results: collection, id_prefix: 'Sidebar' %}
+        </aside>
+      {%- endif -%}
+
+      <div>
+        {% render 'collection-toolbar', results: collection, section: section, show_filters: show_filters, show_sort: section.settings.enable_sorting, count: collection.products_count %}
+        {% render 'active-filters', results: collection, clear_url: clear_url %}
+
+        <div data-collection-grid class="collection-grid">
+          {%- if collection.products.size > 0 -%}
+            <ul class="grid list-unstyled" role="list" style="--cols-mobile: {{ section.settings.columns_mobile }}; --cols-tablet: 3; --cols-desktop: {% if layout_class != blank %}{{ section.settings.columns | at_most: 4 }}{% else %}{{ section.settings.columns }}{% endif %};">
+              {%- for product in collection.products -%}
+                <li>{% render 'product-card', product: product, index: forloop.index0, eager: forloop.first %}</li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <div class="empty-state">
+              <p class="h3">{{ 'collections.empty' | t }}</p>
+              <p>{{ 'collections.empty_text' | t }}</p>
+              {%- if collection.filters.size > 0 -%}
+                <a href="{{ clear_url }}" class="btn btn--secondary" data-facet-link>{{ 'collections.filters.clear_all' | t }}</a>
+              {%- else -%}
+                <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'collections.shop_all' | t }}</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+        <div data-pagination>{% render 'pagination', paginate: paginate, facets: true %}</div>
+      </div>
+    </div>
+  {%- endpaginate -%}
+
+  {%- if show_filters and collection.filters.size > 0 -%}
+    <onyx-drawer id="FilterDrawer-{{ section.id }}" class="drawer drawer--left filter-drawer" role="dialog" aria-modal="true" aria-labelledby="FilterDrawerTitle-{{ section.id }}">
+      <div class="drawer__overlay" data-drawer-close></div>
+      <div class="drawer__panel">
+        <div class="drawer__head">
+          <h2 class="drawer__title" id="FilterDrawerTitle-{{ section.id }}">{% render 'icon', name: 'filter' %}{{ 'collections.filters.title' | t }}</h2>
+          <button type="button" class="icon-btn" data-drawer-close data-drawer-focus>{% render 'icon', name: 'close' %}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+        </div>
+        <div class="drawer__body" data-facets-drawer-body>
+          {% render 'facets', results: collection, id_prefix: 'Drawer' %}
+        </div>
+        <div class="drawer__foot" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <a href="{{ clear_url }}" class="btn btn--secondary" data-facet-link>{{ 'collections.filters.clear' | t }}</a>
+          <button type="button" class="btn" data-drawer-close>{{ 'collections.filters.show_results' | t }}</button>
+        </div>
+      </div>
+    </onyx-drawer>
+  {%- endif -%}
+</onyx-facets>
+
+{% schema %}
+{
+  "name": "Collection products",
+  "class": "section-main-collection",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Collection" },
+    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
+    { "type": "checkbox", "id": "show_image", "label": "Show collection image as background", "default": true },
+    { "type": "link_list", "id": "quick_links", "label": "Quick links menu", "info": "Optional chips linking to related collections." },
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "range", "id": "columns", "label": "Desktop columns", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "select", "id": "columns_mobile", "label": "Mobile columns", "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" } ], "default": "2" },
+    { "type": "header", "content": "Filtering & sorting" },
+    { "type": "checkbox", "id": "enable_filtering", "label": "Enable filtering", "info": "Configure filters with the Search & Discovery app.", "default": true },
+    { "type": "select", "id": "filter_layout", "label": "Desktop filter layout", "options": [ { "value": "sidebar", "label": "Sidebar" }, { "value": "drawer", "label": "Drawer" } ], "default": "sidebar" },
+    { "type": "checkbox", "id": "enable_sorting", "label": "Enable sorting", "default": true }
+  ]
+}
+{% endschema %}

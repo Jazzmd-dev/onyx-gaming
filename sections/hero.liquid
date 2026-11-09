@@ -1,0 +1,124 @@
+{%- liquid
+  assign align = section.settings.alignment
+  assign has_desktop = false
+  if section.settings.image != blank
+    assign has_desktop = true
+  endif
+  assign mobile_image = section.settings.image_mobile | default: section.settings.image
+-%}
+<style>
+  #shopify-section-{{ section.id }} .hero {
+    --overlay: {{ section.settings.overlay | divided_by: 100.0 }};
+    --hero-h: {{ section.settings.height_desktop }}vh;
+    --hero-h-tablet: {{ section.settings.height_desktop | times: 0.85 | round }}vh;
+    --hero-h-mobile: {{ section.settings.height_mobile }}svh;
+  }
+</style>
+<section class="hero hero--{{ align }}" aria-labelledby="HeroTitle-{{ section.id }}">
+  <div class="hero__bg" aria-hidden="true"></div>
+
+  {%- if section.settings.video != blank -%}
+    <div class="hero__media" aria-hidden="true">
+      {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1920x' }}
+    </div>
+  {%- elsif mobile_image != blank -%}
+    <div class="hero__media hero__media--mobile{% if section.settings.image_mobile != blank and has_desktop %} has-desktop{% endif %}" style="--focal: {{ mobile_image.presentation.focal_point }};">
+      {{ mobile_image | image_url: width: 1500 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '450, 600, 750, 900, 1100, 1500', alt: mobile_image.alt}}
+    </div>
+    {%- if section.settings.image_mobile != blank and has_desktop -%}
+      <div class="hero__media hero__media--desktop" style="--focal: {{ section.settings.image.presentation.focal_point }};">
+        {{ section.settings.image | image_url: width: 3200 | image_tag: loading: 'eager', sizes: '100vw', widths: '900, 1200, 1600, 2000, 2400, 3200', alt: section.settings.image.alt}}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if section.settings.show_ambient -%}
+    <div class="hero__aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="hero__grid" aria-hidden="true"></div>
+    <div class="hero__line" aria-hidden="true"></div>
+  {%- endif -%}
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="page-width hero__content">
+    <div class="hero__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- assign heading_tag = 'h2' -%}
+      {%- if section.index == 1 or section.settings.is_page_heading -%}{%- assign heading_tag = 'h1' -%}{%- endif -%}
+      <{{ heading_tag }} id="HeroTitle-{{ section.id }}" class="hero__title h0">
+        {{- section.settings.heading_line_1 | escape -}}
+        {%- if section.settings.heading_line_2 != blank -%}<br><em class="text-gradient">{{ section.settings.heading_line_2 | escape }}</em>{%- endif -%}
+      </{{ heading_tag }}>
+      {%- if section.settings.text != blank -%}
+        <div class="hero__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+        <div class="hero__actions">
+          {%- if section.settings.button_label_1 != blank -%}
+            <a href="{{ section.settings.button_link_1 | default: routes.all_products_collection_url }}" class="btn">{{ section.settings.button_label_1 | escape }} {% render 'icon', name: 'arrow' %}</a>
+          {%- endif -%}
+          {%- if section.settings.button_label_2 != blank -%}
+            <a href="{{ section.settings.button_link_2 | default: routes.collections_url }}" class="btn btn--secondary">{{ section.settings.button_label_2 | escape }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <dl class="hero__stats">
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }}>
+              <dt class="hero__stat-label">{{ block.settings.label | escape }}</dt>
+              <dd class="hero__stat-value" style="order: -1;">{{ block.settings.value | escape }}</dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if section.settings.show_scroll_cue -%}
+    <span class="hero__scroll" aria-hidden="true">{{ 'general.scroll' | t }}</span>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "class": "section-hero",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Cinematic, dark imagery with blue lighting works best. 2400 × 1350px or larger." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional portrait crop for phones. 1080 × 1600px recommended." },
+    { "type": "video", "id": "video", "label": "Background video", "info": "Optional. Replaces the image. Keep it short and compressed." },
+    { "type": "checkbox", "id": "show_ambient", "label": "Show animated ambient lighting", "default": true },
+    { "type": "range", "id": "overlay", "label": "Image overlay", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 45 },
+    { "type": "header", "content": "Layout" },
+    { "type": "select", "id": "alignment", "label": "Content alignment", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ], "default": "center" },
+    { "type": "range", "id": "height_desktop", "label": "Desktop height", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 92 },
+    { "type": "range", "id": "height_mobile", "label": "Mobile height", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 85 },
+    { "type": "checkbox", "id": "show_scroll_cue", "label": "Show scroll cue", "default": true },
+    { "type": "checkbox", "id": "is_page_heading", "label": "Use heading as the page's main title (H1)", "default": true },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Next-gen gaming & tech" },
+    { "type": "text", "id": "heading_line_1", "label": "Heading line 1", "default": "LEVEL UP" },
+    { "type": "text", "id": "heading_line_2", "label": "Heading line 2 (accent)", "default": "YOUR WORLD." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Discover the next generation of gaming, technology and electronics. Premium gear. Incredible performance. Everything you need to stay ahead.</p>" },
+    { "type": "text", "id": "button_label_1", "label": "Primary button label", "default": "Shop now" },
+    { "type": "url", "id": "button_link_1", "label": "Primary button link", "default": "/collections/all" },
+    { "type": "text", "id": "button_label_2", "label": "Secondary button label", "default": "Explore collections" },
+    { "type": "url", "id": "button_link_2", "label": "Secondary button link", "default": "/collections" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Highlight",
+      "settings": [
+        { "type": "paragraph", "content": "Only add facts that are true for your store." },
+        { "type": "text", "id": "value", "label": "Value", "default": "Secure" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Shopify checkout" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

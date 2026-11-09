@@ -1,0 +1,13 @@
+<a href="{{ article.url }}" class="article-card reveal" style="--i: {{ index | default: 0 | modulo: 6 }};">
+  <div class="media" style="--ratio: 1.5;">
+    {%- if article.image -%}
+      {%- assign img_alt = article.image.alt | default: article.title -%}
+      {{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw', widths: '400, 600, 900', alt: img_alt}}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+  <span class="article-card__meta">{{ article.published_at | time_tag: format: 'date' }}</span>
+  <h3 class="article-card__title">{{ article.title | escape }}</h3>
+  {%- if article.excerpt_or_content != blank -%}<p style="font-size: .92rem;">{{ article.excerpt_or_content | strip_html | truncatewords: 22 }}</p>{%- endif -%}
+</a>

@@ -1,0 +1,8 @@
+{%- if shop.enabled_payment_types.size > 0 -%}
+  <ul class="payment-icons list-unstyled" role="list">
+    <li class="visually-hidden">{{ 'footer.payment_methods' | t }}</li>
+    {%- for type in shop.enabled_payment_types -%}
+      <li>{{ type | payment_type_svg_tag }}</li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
