@@ -1,5 +1,22 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "current": "Default",
+  "current": {
+    "blocks": {
+      "10653092989201779468": {
+        "type": "shopify://apps/managed-markets/blocks/adaptive_pricing_banner/01a04a8f-9b00-7a7d-a048-ecae6789cdfc",
+        "disabled": false,
+        "settings": {}
+      }
+    }
+  },
   "presets": {
     "Default": {}
   }
